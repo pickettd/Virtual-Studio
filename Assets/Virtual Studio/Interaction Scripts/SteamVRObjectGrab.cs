@@ -5,7 +5,7 @@ using UnityEngine;
 public class SteamVRObjectGrab : MonoBehaviour
 {
     Transform initialParent;
-
+    /*
     private SteamVR_TrackedObject trackedObj;
     private SteamVR_Controller.Device Controller
     {
@@ -68,5 +68,5 @@ public class SteamVRObjectGrab : MonoBehaviour
     {
         objectInHand.transform.SetParent(initialParent);
         objectInHand.GetComponent<GrabbableObject>().Released(this.gameObject);
-    }
+    }*/
 }
