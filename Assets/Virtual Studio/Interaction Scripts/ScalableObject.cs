@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class ScalableObject : MonoBehaviour {
 
@@ -21,8 +22,11 @@ public class ScalableObject : MonoBehaviour {
         initialParent = this.transform.parent;
 
         grabObjectScript = this.GetComponent<GrabbableObject>();
-        leftController = GameObject.Find("[CameraRig]").transform.GetChild(0).gameObject;
-        rightController = GameObject.Find("[CameraRig]").transform.GetChild(1).gameObject;
+
+        //leftController = GameObject.Find("[CameraRig]").transform.GetChild(0).gameObject;
+        //rightController = GameObject.Find("[CameraRig]").transform.GetChild(1).gameObject;
+        leftController = VRTK_DeviceFinder.GetControllerLeftHand();
+        rightController = VRTK_DeviceFinder.GetControllerRightHand();
 
         grabObjectScript.objectGrabbedEvent += ObjectGrabbed;
         grabObjectScript.objectReleasedEvent += ObjectReleased;

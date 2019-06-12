@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRTK;
 
 public class A_PaintScaler : MonoBehaviour {
 
@@ -19,9 +20,9 @@ public class A_PaintScaler : MonoBehaviour {
     {
         if (pB.controller != null)
         {
-            if (pB.controller.GetPress(SteamVR_Controller.ButtonMask.Touchpad) && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y >= -0.4f && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y <= 0.4f)
+            if (pB.controller.GetPress(SDK_BaseController.ButtonTypes.Touchpad) && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y >= -0.4f && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y <= 0.4f)
             {
-                Vector2 touchpad = (pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+                Vector2 touchpad = (pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad));
                 //pB.SizeX = touchpad.x + 1;
                 //  print("Pressing Touchpad" + touchpad.y * 10 + " x:" + touchpad.x * 10);
                 pB.SizeSelection(touchpad.x + 1, "XYZ");

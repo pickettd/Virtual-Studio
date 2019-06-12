@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class HelperPaintLine : MonoBehaviour {
 
@@ -33,14 +34,14 @@ public class HelperPaintLine : MonoBehaviour {
         //helper line
         if (pb.controller != null)
         {
-            if (pb.controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (pb.controller.GetPressDown(SDK_BaseController.ButtonTypes.Trigger))
             {
                 if (!pb.ray.busy)
                 {
                     pb.helperLineRenderer.SetPosition(0, pb.paintBrushHolder.position);
                 }
             }
-            if (pb.controller.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            if (pb.controller.GetPress(SDK_BaseController.ButtonTypes.Trigger))
             {
                 if (!pb.ray.busy)
                 {
@@ -53,7 +54,7 @@ public class HelperPaintLine : MonoBehaviour {
                    
                 }
             }
-            if (pb.controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            if (pb.controller.GetPressUp(SDK_BaseController.ButtonTypes.Trigger))
             {
              //   print("resetPos");
                    pb.helperLineRenderer.SetPosition(0, pb.paintBrushHolder.position);

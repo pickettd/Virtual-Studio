@@ -3,9 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using VRTK;
 
 public class A_PaintBrush : MonoBehaviour
 {
+    public class mySteamVRControllerTranslation
+    {
+        public VRTK_ControllerReference thisControllerRef;
+
+        public Vector2 GetAxis(SDK_BaseController.ButtonTypes incoming)
+        {
+            return VRTK_SDK_Bridge.GetControllerAxis(incoming, thisControllerRef);
+        }
+
+        public bool GetPressUp(SDK_BaseController.ButtonTypes incoming)
+        {
+            return VRTK_SDK_Bridge.GetControllerButtonState(incoming, SDK_BaseController.ButtonPressTypes.PressUp, thisControllerRef);
+        }
+
+        public bool GetPressDown(SDK_BaseController.ButtonTypes incoming)
+        {
+            return VRTK_SDK_Bridge.GetControllerButtonState(incoming, SDK_BaseController.ButtonPressTypes.PressDown, thisControllerRef);
+        }
+        public bool GetPress(SDK_BaseController.ButtonTypes incoming)
+        {
+            return VRTK_SDK_Bridge.GetControllerButtonState(incoming, SDK_BaseController.ButtonPressTypes.Press, thisControllerRef);
+        }
+        public bool GetTouch(SDK_BaseController.ButtonTypes incoming)
+        {
+            return VRTK_SDK_Bridge.GetControllerButtonState(incoming, SDK_BaseController.ButtonPressTypes.Touch, thisControllerRef);
+        }
+    }
 
     #region variables
     //material 
@@ -34,9 +62,8 @@ public class A_PaintBrush : MonoBehaviour
     //controller
     [Tooltip("the controller the [Paint Brush] object is attached to")]
     public GameObject VRController;
-    SteamVR_TrackedObject trackedObj;
     [HideInInspector]
-    public SteamVR_Controller.Device controller;
+    public mySteamVRControllerTranslation controller;
 
     //paint master
     public A_PaintPalette paintPallete;
@@ -119,7 +146,8 @@ public class A_PaintBrush : MonoBehaviour
         catch (Exception e) { print("Eraser object doesn't seem to exist or has been moved?"); };
 
         //controller
-        try { trackedObj = VRController.GetComponent<SteamVR_TrackedObject>(); }
+        //TODO: Instead of always using right hand, could update this code to figure out what controller hand was passed from Unity editor
+        try { controller.thisControllerRef = VRTK_DeviceFinder.GetControllerReferenceRightHand();}
         catch (Exception e) { print("VRController object doesn't seem to exist or has been moved?"); };
 
         //paintBrush holder
@@ -135,6 +163,7 @@ public class A_PaintBrush : MonoBehaviour
     private void Start()
     {
         //get initial values from PaintPallete
+        controller = new mySteamVRControllerTranslation();
         material = paintPallete.material;
         color = paintPallete.color;
         paintDensity = paintPallete.paintDensity;
@@ -168,14 +197,15 @@ public class A_PaintBrush : MonoBehaviour
     private void Update()
     {
         //get controller buttons
-        controller = SteamVR_Controller.Input((int)trackedObj.index);
-
+        //TODO: Instead of always using right hand, could update this code to figure out what controller hand was passed from Unity editor
+        controller.thisControllerRef = VRTK_DeviceFinder.GetControllerReferenceRightHand();
+        
         //painting
         if (controller != null && !ray.busy)
         {
             if (paintBrushActive)
             {
-                if (controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x > 0.8f)
+                if (controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.8f)
                 {
                     isPainting = true;
                     Paint();
@@ -214,7 +244,7 @@ public class A_PaintBrush : MonoBehaviour
                 {
 
                     float paintDensityS = Vector3.Distance(initialPaintContactPos, paintBrushHolder.position);
-                    if (extrudeMesh != null && controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x > 0.81f)
+                    if (extrudeMesh != null && controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.81f)
                     {
                         //print("trigger half way up");
                         paintDensity = paintDensityS;
@@ -228,7 +258,7 @@ public class A_PaintBrush : MonoBehaviour
         //release the paint object
         if (curPaint != null)
         {
-            if (controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            if (controller.GetPressUp(SDK_BaseController.ButtonTypes.Trigger))
             {
                 if (curPaint != null)
                 {
@@ -254,7 +284,7 @@ public class A_PaintBrush : MonoBehaviour
         //turn paintBrush ON/Off
         if (controller != null)
         {
-            if (controller.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y >= 0.5f)
+            if (controller.GetPressDown(SDK_BaseController.ButtonTypes.Touchpad) && controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y >= 0.5f)
             {
                 if (!paintBrushActive)
                 {

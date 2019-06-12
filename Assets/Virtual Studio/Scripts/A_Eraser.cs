@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRTK;
 
 
 public class A_Eraser : MonoBehaviour
@@ -27,7 +28,7 @@ public class A_Eraser : MonoBehaviour
         //eraser
         if (pb.controller != null)
         {
-            if (pb.controller.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && pb.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y <= -0.5f)
+            if (pb.controller.GetPressDown(SDK_BaseController.ButtonTypes.Touchpad) && pb.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y <= -0.5f)
             {
                 //Vector2 touchpad = (controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
                 //print("Psressing Touchpad" + touchpad.y);

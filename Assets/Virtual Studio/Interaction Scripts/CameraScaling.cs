@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class CameraScaling : MonoBehaviour {
 
     public Transform cameraRig;
-    public SteamVR_TrackedController leftController;
-    public SteamVR_TrackedController rightController;
+    private GameObject leftController;
+    private GameObject rightController;
+    public VRTK_ControllerEvents leftControllerEv;
+    public VRTK_ControllerEvents rightControllerEv;
 
     bool bothGripPressed;
     bool leftGripPressed;
@@ -18,17 +21,38 @@ public class CameraScaling : MonoBehaviour {
     Vector3 initialScale;
     public float sensitivity = 0.5f;
 
+    protected virtual void OnEnable()
+    {
+        RegisterEventsLeft(leftControllerEv);
+        RegisterEventsRight(rightControllerEv);
+    }
+
+    protected virtual void RegisterEventsLeft(VRTK_ControllerEvents events)
+    {
+        if (events != null)
+        {
+            events.GripPressed += LeftGrip;
+            events.GripReleased += LeftUnGrip;
+        }
+    }
+    protected virtual void RegisterEventsRight(VRTK_ControllerEvents events)
+    {
+        if (events != null)
+        {
+            events.GripPressed += RightGrip;
+            events.GripReleased += RightUnGrip;
+        }
+    }
+
     void Start()
     {
         if (!cameraRig)
             cameraRig = this.transform;
-        leftController.Gripped += LeftGrip;
-        leftController.Ungripped += LeftUnGrip;
-        rightController.Gripped += RightGrip;
-        rightController.Ungripped += RightUnGrip;
+        leftController = VRTK_DeviceFinder.GetControllerLeftHand();
+        rightController = VRTK_DeviceFinder.GetControllerRightHand();
     }
 
-    void LeftGrip(object sender, ClickedEventArgs e)
+    void LeftGrip(object sender, ControllerInteractionEventArgs e)
     {
         leftGripPressed = true;
         Debug.Log("Left Grip has been pressed");
@@ -42,13 +66,13 @@ public class CameraScaling : MonoBehaviour {
             }
         }
     }
-    void LeftUnGrip(object sender, ClickedEventArgs e)
+    void LeftUnGrip(object sender, ControllerInteractionEventArgs e)
     {
         leftGripPressed = false;
         bothGripPressed = false;
     }
 
-    void RightGrip(object sender, ClickedEventArgs e)
+    void RightGrip(object sender, ControllerInteractionEventArgs e)
     {
         rightGripPressed = true;
         Debug.Log("Right Grip has been pressed");
@@ -62,7 +86,7 @@ public class CameraScaling : MonoBehaviour {
             }
         }
     }
-    void RightUnGrip(object sender, ClickedEventArgs e)
+    void RightUnGrip(object sender, ControllerInteractionEventArgs e)
     {
        rightGripPressed = false;
        bothGripPressed = false;

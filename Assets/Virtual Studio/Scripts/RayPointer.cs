@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using Valve;
+//using Valve;
+using VRTK;
 
 public class RayPointer : MonoBehaviour
 {
@@ -151,7 +152,7 @@ public class RayPointer : MonoBehaviour
         //broacast clickevent----------------------------------------------------------------------------------------------------
         if (paintBrush.controller != null)
         {
-            if (busy && paintBrush.controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (busy && paintBrush.controller.GetPressDown(SDK_BaseController.ButtonTypes.Trigger))
             {
                 if (objectHit.GetComponent<SelectableItem>())
                 {
@@ -170,7 +171,7 @@ public class RayPointer : MonoBehaviour
             //broacast clickHold-------------------------------------------------------------------------------------------------
             if (paintBrush.controller != null)
             {
-                if (busy && paintBrush.controller.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+                if (busy && paintBrush.controller.GetPress(SDK_BaseController.ButtonTypes.Trigger))
                 {
                     if (objectHit.GetComponent<SelectableItem>())
                     {
@@ -182,7 +183,7 @@ public class RayPointer : MonoBehaviour
             //broacast unClick
             if (paintBrush.controller != null)
             {
-                if (busy && paintBrush.controller.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                if (busy && paintBrush.controller.GetPressUp(SDK_BaseController.ButtonTypes.Trigger))
                 {
                     if (objectHit.GetComponent<SelectableItem>())
                     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using VRTK;
 
 public class TouchpadIcon : MonoBehaviour {
 
@@ -24,7 +25,7 @@ public class TouchpadIcon : MonoBehaviour {
 	void Update () {
         if(pB.controller != null)
         {
-            if (pB.controller.GetTouch(SteamVR_Controller.ButtonMask.Touchpad))
+            if (pB.controller.GetTouch(SDK_BaseController.ButtonTypes.Touchpad))
             {
                 checkBrush();
                 checkEraser();
@@ -36,7 +37,7 @@ public class TouchpadIcon : MonoBehaviour {
 
     void checkEraser()
     {
-        if (pB.controller.GetTouch(SteamVR_Controller.ButtonMask.Touchpad) && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y <= -0.5f)
+        if (pB.controller.GetTouch(SDK_BaseController.ButtonTypes.Touchpad) && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y <= -0.5f)
         {
            // print("touching eraser");
             eraser.targetGraphic.color = eraser.colors.highlightedColor;
@@ -48,7 +49,7 @@ public class TouchpadIcon : MonoBehaviour {
     }
     void checkBrush()
     {
-        if (pB.controller.GetTouch(SteamVR_Controller.ButtonMask.Touchpad) && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y >= 0.5f)
+        if (pB.controller.GetTouch(SDK_BaseController.ButtonTypes.Touchpad) && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y >= 0.5f)
         {
             brush.targetGraphic.color = brush.colors.highlightedColor;
             reverted = false;
@@ -60,7 +61,7 @@ public class TouchpadIcon : MonoBehaviour {
     }
     void checkScaler()
     {
-        if (pB.controller.GetTouch(SteamVR_Controller.ButtonMask.Touchpad) && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y >= -0.4f && pB.controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y <= 0.4f)
+        if (pB.controller.GetTouch(SDK_BaseController.ButtonTypes.Touchpad) && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y >= -0.4f && pB.controller.GetAxis(SDK_BaseController.ButtonTypes.Touchpad).y <= 0.4f)
         { scaler.targetGraphic.color = scaler.colors.highlightedColor;
             reverted = false;
         }
