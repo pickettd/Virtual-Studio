@@ -147,7 +147,10 @@ public class A_PaintBrush : MonoBehaviour
 
         //controller
         //TODO: Instead of always using right hand, could update this code to figure out what controller hand was passed from Unity editor
-        try { controller.thisControllerRef = VRTK_DeviceFinder.GetControllerReferenceRightHand();}
+        try {
+            controller.thisControllerRef = VRTK_DeviceFinder.GetControllerReferenceRightHand();
+            //Debug.Log("found it");
+        }
         catch (Exception e) { print("VRController object doesn't seem to exist or has been moved?"); };
 
         //paintBrush holder
@@ -205,7 +208,7 @@ public class A_PaintBrush : MonoBehaviour
         {
             if (paintBrushActive)
             {
-                if (controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.8f)
+                if ((controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.8f) || (controller.GetPress(SDK_BaseController.ButtonTypes.Trigger)))
                 {
                     isPainting = true;
                     Paint();
@@ -244,7 +247,7 @@ public class A_PaintBrush : MonoBehaviour
                 {
 
                     float paintDensityS = Vector3.Distance(initialPaintContactPos, paintBrushHolder.position);
-                    if (extrudeMesh != null && controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.81f)
+                    if (extrudeMesh != null && ((controller.GetAxis(SDK_BaseController.ButtonTypes.Trigger).x > 0.81f) || (controller.GetPressUp(SDK_BaseController.ButtonTypes.Trigger))))
                     {
                         //print("trigger half way up");
                         paintDensity = paintDensityS;
@@ -324,7 +327,10 @@ public class A_PaintBrush : MonoBehaviour
         {
             //make a global paint holder for all created objects
             if (paintGlobal == null)
+            {
                 paintGlobal = new GameObject("Paint_Global");
+                //paintGlobal = GameObject.Find("Paint_Global");
+            }
 
             //instantiate paint and parent to paintGlobal object
             curPaint = (GameObject)Instantiate(activeBrush, paintBrushHolder.transform.position, paintBrushHolder.rotation);
@@ -335,7 +341,8 @@ public class A_PaintBrush : MonoBehaviour
             //  extrusionTarget.transform.parent = paintBrushHolder.transform; //(this now has been moved in the Update for doing freezongPos)
 
             //turn mesh extrusion on
-            extrudeMesh = curPaint.transform.GetChild(0).GetComponent<ExtrudeMesh>();
+            Transform extrudeMeshTransform = curPaint.transform.GetChild(0);
+            extrudeMesh = extrudeMeshTransform.GetComponent<ExtrudeMesh>();
             extrudeMesh.time = Mathf.Infinity;
 
             //caps
